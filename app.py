@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
-from flask_cors import CORS 
+from flask_cors import CORS
+import os  # Добавляем os для получения порта из переменной окружения
 
 app = Flask(__name__)
 CORS(app)
@@ -10,7 +11,6 @@ CORS(app)
 @app.route('/')
 def home():
     return "Welcome to my Flask API!"
-
 
 # Настройка базы данных SQLite
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -62,5 +62,7 @@ def login():
     else:
         return jsonify({"message": "Invalid credentials"}), 401
 
+# Здесь добавляем код для использования порта из переменной окружения
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # Получаем порт из переменной окружения или используем 5000 по умолчанию
+    app.run(host='0.0.0.0', port=port)
